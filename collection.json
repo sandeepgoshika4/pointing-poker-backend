@@ -1,0 +1,206 @@
+{
+  "info": {
+    "name": "Planning Poker - Spring Boot API",
+    "_postman_id": "d55a2d44-883c-4e8f-88ad-91c1bb3cd999",
+    "description": "REST + WebSocket endpoints for Planning Poker application.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Room",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/rooms",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "rooms"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Room (replace ROOMCODE)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/rooms/{{ROOMCODE}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "rooms", "{{ROOMCODE}}"]
+        }
+      }
+    },
+    {
+      "name": "WebSockets",
+      "item": [
+        {
+          "name": "WS Connect (SockJS)",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "ws://localhost:8080/ws/websocket",
+              "protocol": "ws",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["ws", "websocket"]
+            }
+          },
+          "type": "websocket"
+        },
+        {
+          "name": "Join Room",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "ws://localhost:8080/ws/websocket",
+              "protocol": "ws",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["ws", "websocket"]
+            }
+          },
+          "type": "websocket",
+          "ws": {
+            "messages": [
+              {
+                "name": "stomp-subscribe-room",
+                "data": "SUBSCRIBE\ndestination:/topic/rooms/{{ROOMCODE}}\nid:sub-001\n\n\u0000"
+              },
+              {
+                "name": "stomp-join",
+                "data": "SEND\ndestination:/app/rooms/{{ROOMCODE}}/join\ncontent-type:application/json\n\n{\"playerId\":\"{{PLAYERID}}\", \"name\":\"{{PLAYERNAME}}\"}\u0000"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Send Vote",
+          "type": "websocket",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "ws://localhost:8080/ws/websocket",
+              "protocol": "ws",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["ws", "websocket"]
+            }
+          },
+          "ws": {
+            "messages": [
+              {
+                "name": "vote",
+                "data": "SEND\ndestination:/app/rooms/{{ROOMCODE}}/vote\ncontent-type:application/json\n\n{\"playerId\":\"{{PLAYERID}}\", \"value\":\"5\"}\u0000"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Reveal Votes",
+          "type": "websocket",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "ws://localhost:8080/ws/websocket",
+              "protocol": "ws",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["ws", "websocket"]
+            }
+          },
+          "ws": {
+            "messages": [
+              {
+                "data": "SEND\ndestination:/app/rooms/{{ROOMCODE}}/reveal\n\n\u0000"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Hide Votes",
+          "type": "websocket",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "ws://localhost:8080/ws/websocket",
+              "protocol": "ws",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["ws", "websocket"]
+            }
+          },
+          "ws": {
+            "messages": [
+              {
+                "data": "SEND\ndestination:/app/rooms/{{ROOMCODE}}/hide\n\n\u0000"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Reset Votes",
+          "type": "websocket",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "ws://localhost:8080/ws/websocket",
+              "protocol": "ws",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["ws", "websocket"]
+            }
+          },
+          "ws": {
+            "messages": [
+              {
+                "data": "SEND\ndestination:/app/rooms/{{ROOMCODE}}/reset\n\n\u0000"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Update Story Title / Jira",
+          "type": "websocket",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "ws://localhost:8080/ws/websocket",
+              "protocol": "ws",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["ws", "websocket"]
+            }
+          },
+          "ws": {
+            "messages": [
+              {
+                "data": "SEND\ndestination:/app/rooms/{{ROOMCODE}}/story\ncontent-type:application/json\n\n{\"storyTitle\":\"Checkout API\", \"jiraKey\":\"PAY-134\"}\u0000"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "ROOMCODE",
+      "value": "ABC123"
+    },
+    {
+      "key": "PLAYERID",
+      "value": "player-001"
+    },
+    {
+      "key": "PLAYERNAME",
+      "value": "Anil"
+    }
+  ]
+}
