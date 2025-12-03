@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKERHUB_USER = "sandeepgoshika4"
         IMAGE_NAME = "poker-backend"
-        KUBECONFIG = credentials('.kube/config')
+        KUBECONFIG = credentials('kubeconfig-pi')
     }
 
     stages {
