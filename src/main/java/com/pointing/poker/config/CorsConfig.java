@@ -16,7 +16,9 @@ public class CorsConfig {
                 registry.addMapping("/**")
                         .allowedOrigins(
                                 "http://localhost:4200",
-                                "http://192.168.18.200:30081"
+                                "http://192.168.18.200:30081",
+                                "https://agilepoker.win",
+                                "https://www.agilepoker.win"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
